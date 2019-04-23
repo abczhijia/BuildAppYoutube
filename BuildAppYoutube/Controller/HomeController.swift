@@ -14,6 +14,27 @@ import Kingfisher
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     let cellId = "cellId"
     
+    let videos: [Video] = {
+        let video = Video()
+        video.thumbnailImage = "http://pic150.nipic.com/file/20171224/8669400_090903351033_2.jpg"
+        video.userProfileImage = "http://tx.haiqq.com/uploads/allimg/170921/021505OS-8.jpg"
+        video.nickname = "昵称好奇怪"
+        video.title = "天苍苍，野茫茫，风吹草低现牛羊"
+        video.views = 200000
+        video.years = 10
+        
+        let video2 = Video()
+        video2.thumbnailImage = "http://pic150.nipic.com/file/20171224/8669400_090903351033_2.jpg"
+        video2.userProfileImage = "http://tx.haiqq.com/uploads/allimg/170921/021505OS-8.jpg"
+        video2.nickname = "天下兴亡，匹夫有责"
+        video2.title = "白日依山尽，黄河入海流，欲穷千里目，更上一层楼"
+        video2.views = 100000
+        video2.years = 20
+        
+        
+        return [video, video2]
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         collectionView.backgroundColor = UIColor.white
@@ -84,16 +105,18 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     @objc func handleMore() {
         print("more")
     }
+    
     @objc func handleSearch(){
         print("search")
     }
+    
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 15
+        return videos.count
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath)
-        
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! VideoCell
+        cell.video = videos[indexPath.item]
         return cell
     }
     

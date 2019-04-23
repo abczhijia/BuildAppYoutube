@@ -18,13 +18,20 @@ class VideoCell: UICollectionViewCell {
         setupViews()
     }
     
+    var video: Video? {
+        didSet {
+            thumbnailImageView.kf.setImage(with: URL(string: video!.thumbnailImage!))
+            userProfileImageView.kf.setImage(with: URL(string: video!.userProfileImage!))
+            titleLabel.text = video!.title!
+            subtitleTextView.text = "\(video!.nickname!) - \(video!.views!)次观看 - \(video!.years!)年前"
+        }
+    }
+    
     let thumbnailImageView:UIImageView = {
         let iv = UIImageView()
         iv.clipsToBounds = true
         iv.backgroundColor = UIColor.blue
         iv.contentMode = .scaleAspectFill
-        let url = URL(string: "http://pic150.nipic.com/file/20171224/8669400_090903351033_2.jpg")
-        iv.kf.setImage(with: url)
         return iv
     }()
     
@@ -41,23 +48,16 @@ class VideoCell: UICollectionViewCell {
         iv.layer.cornerRadius = VideoUtil.userProfileWidth / 2
         iv.backgroundColor = UIColor.red
         iv.contentMode = .scaleAspectFill
-        
-        let url = URL(string: "http://tx.haiqq.com/uploads/allimg/170921/021505OS-8.jpg")
-        iv.kf.setImage(with: url)
         return iv
     }()
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        //        label.backgroundColor = UIColor.red
-        label.text = "宁静的夜晚，美丽的乡村，那人正在灯火阑珊处"
         return label
     }()
     
     let subtitleTextView: UITextView = {
         let stv = UITextView()
-        //        stv.backgroundColor = UIColor.purple
-        stv.text = "昵称好奇怪 - 20000次观看 - 10000个喜欢 - 2年前"
         stv.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
         stv.textColor = UIColor.lightGray
         return stv
