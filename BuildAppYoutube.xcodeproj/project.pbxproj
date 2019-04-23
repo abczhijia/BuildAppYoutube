@@ -82,7 +82,6 @@
 				7D9E327E01E63ACAE3C75ACE /* Pods-BuildAppYoutube.debug.xcconfig */,
 				42F2D283F3912B43BCD88FE0 /* Pods-BuildAppYoutube.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
