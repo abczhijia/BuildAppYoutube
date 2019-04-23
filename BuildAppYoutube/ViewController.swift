@@ -11,6 +11,17 @@ import SnapKit
 import Kingfisher
 
 
+let videoCellMargin:CGFloat = 16
+let userProfileWidth:CGFloat = 48
+let userProfileMargin:CGFloat = 10
+let titleHeight:CGFloat = 20
+let subtitleHeight:CGFloat = 20
+let videoCellMarginBottom:CGFloat = 10
+
+func getThumbnaiHeight() -> CGFloat {
+    return (UIScreen.main.bounds.width - videoCellMargin * 2) * 9 / 16 + videoCellMargin
+}
+
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     let cellId = "cellId"
     
@@ -21,7 +32,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return 15
     }
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -31,15 +42,13 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: view.frame.width, height: 300)
+        let height = getThumbnaiHeight() + userProfileMargin + titleHeight + subtitleHeight * 2 + userProfileMargin + videoCellMarginBottom
+        return CGSize(width: view.frame.width, height: height)
     }
 }
 
 
 class VideoCell: UICollectionViewCell {
-
-    static let videoCellMargin:CGFloat = 16
-    static let userProfileWidth:CGFloat = videoCellMargin * 3
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -48,7 +57,7 @@ class VideoCell: UICollectionViewCell {
     
     let thumbnailImageView:UIImageView = {
         let iv = UIImageView()
-        iv.layer.masksToBounds = true
+        iv.clipsToBounds = true
         iv.backgroundColor = UIColor.blue
         iv.contentMode = .scaleAspectFill
         let url = URL(string: "http://pic150.nipic.com/file/20171224/8669400_090903351033_2.jpg")
@@ -58,14 +67,15 @@ class VideoCell: UICollectionViewCell {
     
     let seperatorView:UIView = {
         let sepView = UIView()
-        sepView.backgroundColor = UIColor.gray
+        sepView.backgroundColor = UIColor.lightGray
         return sepView
     }()
     
     let userProfileImageView:UIImageView = {
         let iv = UIImageView()
-        iv.layer.masksToBounds = true
-        iv.layer.cornerRadius = VideoCell.userProfileWidth / 2
+//        iv.layer.masksToBounds = true
+        iv.clipsToBounds = true
+        iv.layer.cornerRadius = userProfileWidth / 2
         iv.backgroundColor = UIColor.red
         iv.contentMode = .scaleAspectFill
         
@@ -76,13 +86,17 @@ class VideoCell: UICollectionViewCell {
     
     let titleLabel: UILabel = {
         let label = UILabel()
-        label.backgroundColor = UIColor.red
+//        label.backgroundColor = UIColor.red
+        label.text = "宁静的夜晚，美丽的乡村，那人正在灯火阑珊处"
         return label
     }()
     
     let subtitleTextView: UITextView = {
         let stv = UITextView()
-        stv.backgroundColor = UIColor.purple
+//        stv.backgroundColor = UIColor.purple
+        stv.text = "昵称好奇怪 - 20000次观看 - 10000个喜欢 - 2年前"
+        stv.textContainerInset = UIEdgeInsets(top: 0, left: 0, bottom: 0, right: 0)
+        stv.textColor = UIColor.lightGray
         return stv
     }()
     
@@ -94,38 +108,38 @@ class VideoCell: UICollectionViewCell {
         addSubview(subtitleTextView)
         
         thumbnailImageView.snp.makeConstraints { (m) in
-            m.top.equalTo(0)
-            m.left.equalTo(VideoCell.videoCellMargin)
-            m.right.equalTo(-VideoCell.videoCellMargin)
-            m.height.equalTo(200)
+            m.top.equalTo(16)
+            m.left.equalTo(videoCellMargin)
+            m.right.equalTo(-videoCellMargin)
+            m.height.equalTo(getThumbnaiHeight())
         }
         
         seperatorView.snp.makeConstraints { (m) in
-            m.left.equalTo(0)
-            m.right.equalTo(0)
+            m.left.equalTo(videoCellMargin)
+            m.right.equalTo(-videoCellMargin)
             m.bottom.equalTo(0)
             m.height.equalTo(1)
         }
         
         userProfileImageView.snp.makeConstraints { (m) in
-            m.left.equalTo(VideoCell.videoCellMargin)
-            m.width.equalTo(VideoCell.userProfileWidth)
-            m.top.equalTo(thumbnailImageView.snp.bottom).offset(10)
-            m.height.equalTo(VideoCell.userProfileWidth)
+            m.left.equalTo(videoCellMargin)
+            m.width.equalTo(userProfileWidth)
+            m.top.equalTo(thumbnailImageView.snp.bottom).offset(userProfileMargin)
+            m.height.equalTo(userProfileWidth)
         }
         
         titleLabel.snp.makeConstraints { (m) in
-            m.left.equalTo(userProfileImageView.snp.right).offset(10)
-            m.right.equalTo(-VideoCell.videoCellMargin)
-            m.top.equalTo(thumbnailImageView.snp.bottom).offset(10)
-            m.height.equalTo(24)
+            m.left.equalTo(userProfileImageView.snp.right).offset(userProfileMargin)
+            m.right.equalTo(-videoCellMargin)
+            m.top.equalTo(thumbnailImageView.snp.bottom).offset(userProfileMargin)
+            m.height.equalTo(titleHeight)
         }
         
         subtitleTextView.snp.makeConstraints { (m) in
-            m.left.equalTo(userProfileImageView.snp.right).offset(10)
-            m.right.equalTo(-VideoCell.videoCellMargin)
-            m.top.equalTo(titleLabel.snp.bottom).offset(10)
-            m.height.equalTo(24)
+            m.left.equalTo(userProfileImageView.snp.right).offset(userProfileMargin)
+            m.right.equalTo(-videoCellMargin)
+            m.top.equalTo(titleLabel.snp.bottom).offset(userProfileMargin)
+            m.height.equalTo(subtitleHeight)
         }
     }
     
