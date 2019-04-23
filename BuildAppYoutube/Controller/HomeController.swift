@@ -21,6 +21,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         collectionView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
         collectionView.scrollIndicatorInsets = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
         setupNavigationBar()
+        setupNavBarButtons()
         setupMenuBar()
     }
     
@@ -28,7 +29,8 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let titleView = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
         titleView.text = "首页"
         titleView.textColor = UIColor.white
-        titleView.font = UIFont.systemFont(ofSize: 24)
+//        titleView.backgroundColor = UIColor.blue
+        titleView.font = UIFont.systemFont(ofSize: 20)
         
         return titleView
     }()
@@ -37,6 +39,18 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         let mb = MenuBar()
         return mb
     }()
+    
+    func setupNavBarButtons() {
+        let searchImage = UIImage(named: "search")?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
+        let searchBarButtonItem = UIBarButtonItem(image: searchImage, style: UIBarButtonItem.Style.plain, target: self, action: #selector(handleSearch))
+        
+        let moreImage = UIImage(named: "more")?.withRenderingMode(UIImage.RenderingMode.alwaysOriginal)
+        
+        let moreBarButtonItem = UIBarButtonItem(image: moreImage, style: UIBarButtonItem.Style.plain, target: self, action: #selector(handleMore))
+        
+        navigationItem.rightBarButtonItems = [moreBarButtonItem, searchBarButtonItem]
+//        navigationItem.setRightBarButtonItems([moreBarButtonItem, searchBarButtonItem], animated: false)
+    }
     
     func setupMenuBar() {
         view.addSubview(menuBar)
@@ -67,6 +81,12 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
 //        return .lightContent
 //    }
 //
+    @objc func handleMore() {
+        print("more")
+    }
+    @objc func handleSearch(){
+        print("search")
+    }
     override func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return 15
     }
