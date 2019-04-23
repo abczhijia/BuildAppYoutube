@@ -18,18 +18,35 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         super.viewDidLoad()
         collectionView.backgroundColor = UIColor.white
         collectionView.register(VideoCell.self, forCellWithReuseIdentifier: cellId)
+        collectionView.contentInset = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
+        collectionView.scrollIndicatorInsets = UIEdgeInsets(top: 50, left: 0, bottom: 0, right: 0)
         setupNavigationBar()
+        setupMenuBar()
     }
     
-    
     lazy var titleView:UILabel = {
-        let titleView = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width - 32, height: view.frame.height))
+        let titleView = UILabel(frame: CGRect(x: 0, y: 0, width: view.frame.width, height: view.frame.height))
         titleView.text = "首页"
         titleView.textColor = UIColor.white
         titleView.font = UIFont.systemFont(ofSize: 24)
-
+        
         return titleView
     }()
+    
+    let menuBar:MenuBar = {
+        let mb = MenuBar()
+        return mb
+    }()
+    
+    func setupMenuBar() {
+        view.addSubview(menuBar)
+        menuBar.snp.makeConstraints { (m) in
+            m.top.equalTo(0)
+            m.left.equalTo(0)
+            m.right.equalTo(0)
+            m.height.equalTo(50)
+        }
+    }
     
     func setupNavigationBar() {
         //设置statusBar
@@ -38,8 +55,12 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         navigationItem.titleView = titleView
         //设置title背景颜色
         navigationController?.navigationBar.barTintColor = UIColor.red
-        //关掉半透明
-//        navigationController?.navigationBar.isTranslucent = true
+        //不能透明，如果透明了，navigationBar就不会占空间了，会导致子元素top的时候，往上移动
+        navigationController?.navigationBar.isTranslucent = false
+        
+        //移除navagation的黑色线条
+        navigationController?.navigationBar.shadowImage = UIImage()
+        navigationController?.navigationBar.setBackgroundImage(UIImage(), for: .default)
     }
     
 //    override var preferredStatusBarStyle: UIStatusBarStyle {
