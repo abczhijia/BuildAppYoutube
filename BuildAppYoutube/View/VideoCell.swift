@@ -20,10 +20,10 @@ class VideoCell: UICollectionViewCell {
     
     var video: Video? {
         didSet {
-            thumbnailImageView.kf.setImage(with: URL(string: video!.thumbnailImage!))
-            userProfileImageView.kf.setImage(with: URL(string: video!.userProfileImage!))
+            thumbnailImageView.kf.setImage(with: URL(string: video!.image!))
+            userProfileImageView.kf.setImage(with: URL(string: video!.avatar!))
             titleLabel.text = video!.title!
-            subtitleTextView.text = "\(video!.nickname!) - \(video!.views!)次观看 - \(video!.years!)年前"
+            subtitleTextView.text = "\(video!.nickname!) - \(video!.like_count!)次观看 - \(video!.years!)年前"
         }
     }
     

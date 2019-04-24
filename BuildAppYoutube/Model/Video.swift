@@ -9,10 +9,19 @@
 import UIKit
 
 class Video: NSObject {
-    var thumbnailImage: String?
+    var image: String?
     var title: String?
-    var userProfileImage: String?
+    var alias: String?
+//    var user: VideoUser?
+    var avatar: String?
     var nickname: String?
-    var views: Int?
+    var like_count: Int?
     var years: Int?
+}
+
+class VideoUser: NSObject {
+    var nickname: String?
+    var avatar: String?
+    var like_count: Int?
+    var comment_count: Int?
 }

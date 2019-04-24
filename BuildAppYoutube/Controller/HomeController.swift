@@ -9,39 +9,14 @@
 import UIKit
 import SnapKit
 import Kingfisher
+import Alamofire
+import SwiftyJSON
 
 
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
     let cellId = "cellId"
     
-    let videos: [Video] = {
-        let video = Video()
-        video.thumbnailImage = "http://pic150.nipic.com/file/20171224/8669400_090903351033_2.jpg"
-        video.userProfileImage = "http://tx.haiqq.com/uploads/allimg/170921/021505OS-8.jpg"
-        video.nickname = "昵称好奇怪"
-        video.title = "天苍苍，野茫茫，风吹草低现牛羊"
-        video.views = 200000
-        video.years = 10
-        
-        let video2 = Video()
-        video2.thumbnailImage = "http://pic150.nipic.com/file/20171224/8669400_090903351033_2.jpg"
-        video2.userProfileImage = "http://tx.haiqq.com/uploads/allimg/170921/021505OS-8.jpg"
-        video2.nickname = "天下兴亡，匹夫有责"
-        video2.title = "白日依山尽，黄河入海流，欲穷千里目，更上一层楼"
-        video2.views = 100000
-        video2.years = 20
-        
-        let video3 = Video()
-        video3.thumbnailImage = "http://pic150.nipic.com/file/20171224/8669400_090903351033_2.jpg"
-        video3.userProfileImage = "http://tx.haiqq.com/uploads/allimg/170921/021505OS-8.jpg"
-        video3.nickname = "抖音大神"
-        video3.title = "君不见，黄河之水天上来，奔流到海不复回，君不见，高堂明镜悲白发，朝如青丝暮成雪"
-        video3.views = 100000
-        video3.years = 20
-        
-        
-        return [video, video2, video3]
-    }()
+    var videos: [Video] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,6 +27,29 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         setupNavigationBar()
         setupNavBarButtons()
         setupMenuBar()
+        fetchVideos()
+    }
+    
+    func fetchVideos() {
+        let url = "https://api.starkos.cn/video/getVideoListByCateId?cate_id=1&page=1&appid=1447013786"
+        Alamofire.request(url).responseJSON { response in
+            print("Result: \(response.result)")                         // response serialization result
+            
+            if let json = response.result.value {
+                let videoList = JSON(json)["data"]
+                for (key, v):(String, JSON) in videoList {
+                    let video = Video()
+                    video.image = v["image"].string
+                    video.avatar = v["user_info"]["avatar"].string
+                    video.nickname = v["user_info"]["nickname"].string
+                    video.title = v["title"].string
+                    video.like_count = v["like_count"].int
+                    video.years = 10
+                    self.videos.append(video)
+                }
+                self.collectionView.reloadData()
+            }
+        }
     }
     
     lazy var titleView:UILabel = {
