@@ -37,7 +37,7 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
             
             if let json = response.result.value {
                 let videoList = JSON(json)["data"]
-                for (key, v):(String, JSON) in videoList {
+                for (_, v):(String, JSON) in videoList {
                     let video = Video()
                     video.image = v["image"].string
                     video.avatar = v["user_info"]["avatar"].string
@@ -107,9 +107,14 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
 //    override var preferredStatusBarStyle: UIStatusBarStyle {
 //        return .lightContent
 //    }
-//
+    
+    lazy var launcherMore: LauncherMore = {
+        print("create launcher") //使用了lazy关键字，确实延迟创建了LauncherMore
+       return LauncherMore()
+    }()
+    
     @objc func handleMore() {
-        print("more")
+        launcherMore.showMore()
     }
     
     @objc func handleSearch(){
