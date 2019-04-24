@@ -31,8 +31,16 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
         video2.views = 100000
         video2.years = 20
         
+        let video3 = Video()
+        video3.thumbnailImage = "http://pic150.nipic.com/file/20171224/8669400_090903351033_2.jpg"
+        video3.userProfileImage = "http://tx.haiqq.com/uploads/allimg/170921/021505OS-8.jpg"
+        video3.nickname = "抖音大神"
+        video3.title = "君不见，黄河之水天上来，奔流到海不复回，君不见，高堂明镜悲白发，朝如青丝暮成雪"
+        video3.views = 100000
+        video3.years = 20
         
-        return [video, video2]
+        
+        return [video, video2, video3]
     }()
     
     override func viewDidLoad() {
@@ -116,12 +124,24 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! VideoCell
-        cell.video = videos[indexPath.item]
+        let video = videos[indexPath.item]
+        //根据字符串长度计算出字符串的高度
+        let titleLabelHeight:CGFloat = VideoUtil.getTitleHeight(title: video.title!)
+        //设置cell的video数据
+        cell.video = video
+        //更新cell.titleLabel的高度
+        cell.titleLabel.snp.updateConstraints { (m) in
+            m.height.equalTo(titleLabelHeight)
+        }
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        let height = VideoUtil.getThumbnaiHeight() + VideoUtil.userProfileMargin + VideoUtil.titleHeight + VideoUtil.subtitleHeight * 2 + VideoUtil.userProfileMargin + VideoUtil.videoCellMarginBottom
+        let video = videos[indexPath.item]
+        let titleLabelHeight:CGFloat = VideoUtil.getTitleHeight(title: video.title!)
+        let height = VideoUtil.getThumbnaiHeight() + VideoUtil.userProfileMargin + titleLabelHeight + VideoUtil.subtitleHeight * 2 + VideoUtil.userProfileMargin + VideoUtil.videoCellMarginBottom
+        
+        print("cellHeight: \(height)")
         return CGSize(width: view.frame.width, height: height)
     }
 }

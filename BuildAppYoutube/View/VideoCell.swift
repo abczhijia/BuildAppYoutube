@@ -53,6 +53,7 @@ class VideoCell: UICollectionViewCell {
     
     let titleLabel: UILabel = {
         let label = UILabel()
+        label.numberOfLines = 2
         return label
     }()
     
@@ -71,7 +72,7 @@ class VideoCell: UICollectionViewCell {
         addSubview(subtitleTextView)
         
         thumbnailImageView.snp.makeConstraints { (m) in
-            m.top.equalTo(16)
+            m.top.equalTo(VideoUtil.videoCellMargin)
             m.left.equalTo(VideoUtil.videoCellMargin)
             m.right.equalTo(-VideoUtil.videoCellMargin)
             m.height.equalTo(VideoUtil.getThumbnaiHeight())
