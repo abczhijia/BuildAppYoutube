@@ -12,6 +12,15 @@ protocol LaunchMoreDelegate {
     func handleMoreItemClick(index: Int, item: MoreItem)
 }
 
+enum MoreName: String {
+    case Setting = "设置"
+    case Feedback = "好评反馈"
+    case Share = "分享"
+    case Help = "帮助"
+    case Comment = "评论"
+    case Cancel = "取消"
+}
+
 class LauncherMore: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
     var lmd: LaunchMoreDelegate?
     let cellId = "cellId"
@@ -28,12 +37,13 @@ class LauncherMore: NSObject, UICollectionViewDataSource, UICollectionViewDelega
     let animationDuration: Double = 0.2
     let moreItems: [MoreItem] = {
         return [
-            MoreItem(iconName: "setting", name: "设置", key: "setting"),
-            MoreItem(iconName: "setting", name: "好评反馈", key: "feedback"),
-            MoreItem(iconName: "setting", name: "分享", key: "share"),
-            MoreItem(iconName: "setting", name: "帮助", key: "help"),
-            MoreItem(iconName: "setting", name: "评论", key: "comment"),
-            MoreItem(iconName: "setting", name: "取消", key: "cancel")
+            MoreItem(iconName: "setting", name: .Setting, key: "setting"),
+            MoreItem(iconName: "setting", name: .Feedback, key: "feedback"),
+            MoreItem(iconName: "setting", name: .Share, key: "share"),
+            MoreItem(iconName: "setting", name: .Help, key: "help"),
+            MoreItem(iconName: "setting", name: .Comment, key: "comment"),
+            MoreItem(iconName: "setting", name: .Cancel, key: "cancel"),
+
         ]
     }()
     override init() {
@@ -110,10 +120,10 @@ class LauncherMore: NSObject, UICollectionViewDataSource, UICollectionViewDelega
 
 class MoreItem: NSObject {
     var iconName: String?
-    var name: String?
+    var name: MoreName?
     var key: String?
     
-    init(iconName: String, name: String, key: String) {
+    init(iconName: String, name: MoreName, key: String) {
         super.init()
         self.iconName = iconName
         self.name = name
@@ -136,7 +146,7 @@ class MoreCell: UICollectionViewCell {
     var moreItem: MoreItem? {
         didSet {
             print("moreItem didSet")
-            labelView.text = moreItem!.name
+            labelView.text = moreItem!.name?.rawValue
             iconView.image = UIImage(named: moreItem!.iconName!)!.withRenderingMode(.alwaysTemplate)
         }
     }

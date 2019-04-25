@@ -15,8 +15,8 @@ import SwiftyJSON
 
 class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout, LaunchMoreDelegate {
     func handleMoreItemClick(index: Int, item: MoreItem) {
-        let key = item.key
-        if(key != "cancel") {
+        let name = item.name
+        if(name != MoreName.Cancel) {
             let vc = UIViewController()
             vc.view.backgroundColor = UIColor.white
             navigationController?.pushViewController(vc, animated: true)
