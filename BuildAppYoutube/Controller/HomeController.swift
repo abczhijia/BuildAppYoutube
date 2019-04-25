@@ -13,7 +13,24 @@ import Alamofire
 import SwiftyJSON
 
 
-class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout {
+class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLayout, LaunchMoreDelegate {
+    func handleMoreItemClick(index: Int, item: MoreItem) {
+        let key = item.key
+        if(key != "cancel") {
+            let vc = UIViewController()
+            vc.view.backgroundColor = UIColor.white
+            navigationController?.pushViewController(vc, animated: true)
+        }else {
+            let alert = UIAlertController(title: "确定取消吗？", message: "取消之后不可恢复", preferredStyle: UIAlertController.Style.alert)
+            alert.addAction(UIAlertAction(title: "确定", style: UIAlertAction.Style.default, handler: { (m) in
+                print("alert confirm")
+            }))
+            self.present(alert, animated: true) {
+                print("completed")
+            }
+        }
+    }
+    
     let cellId = "cellId"
     
     var videos: [Video] = []
@@ -110,11 +127,16 @@ class HomeController: UICollectionViewController, UICollectionViewDelegateFlowLa
     
     lazy var launcherMore: LauncherMore = {
         print("create launcher") //使用了lazy关键字，确实延迟创建了LauncherMore
-       return LauncherMore()
+        let lm = LauncherMore()
+        lm.lmd = self
+        
+        return lm
     }()
     
     @objc func handleMore() {
         launcherMore.showMore()
+        
+//        navigationController?.pushViewController(settingMoreController, animated: true)
     }
     
     @objc func handleSearch(){

@@ -8,15 +8,18 @@
 
 import UIKit
 
+protocol LaunchMoreDelegate {
+    func handleMoreItemClick(index: Int, item: MoreItem)
+}
+
 class LauncherMore: NSObject, UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
+    var lmd: LaunchMoreDelegate?
     let cellId = "cellId"
     let maskView = UIView(frame: UIScreen.main.bounds)
     let cellHeight: CGFloat = 50
     let collectionView: UICollectionView = {
         let layout = UICollectionViewFlowLayout()
         let cv = UICollectionView(frame: CGRect.zero, collectionViewLayout: layout)
-//        cv.dataSource = self
-//        cv.delegate = self
         cv.backgroundColor = UIColor.white
         return cv
     }()
@@ -25,13 +28,12 @@ class LauncherMore: NSObject, UICollectionViewDataSource, UICollectionViewDelega
     let animationDuration: Double = 0.2
     let moreItems: [MoreItem] = {
         return [
-            MoreItem(iconName: "setting", name: "设置"),
-            MoreItem(iconName: "setting", name: "好评反馈"),
-            MoreItem(iconName: "setting", name: "分享"),
-            MoreItem(iconName: "setting", name: "帮助"),
-            MoreItem(iconName: "setting", name: "评价"),
-            MoreItem(iconName: "setting", name: "赞赏"),
-            MoreItem(iconName: "setting", name: "取消")
+            MoreItem(iconName: "setting", name: "设置", key: "setting"),
+            MoreItem(iconName: "setting", name: "好评反馈", key: "feedback"),
+            MoreItem(iconName: "setting", name: "分享", key: "share"),
+            MoreItem(iconName: "setting", name: "帮助", key: "help"),
+            MoreItem(iconName: "setting", name: "评论", key: "comment"),
+            MoreItem(iconName: "setting", name: "取消", key: "cancel")
         ]
     }()
     override init() {
@@ -47,9 +49,11 @@ class LauncherMore: NSObject, UICollectionViewDataSource, UICollectionViewDelega
         return moreItems.count
     }
     
+    
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: cellId, for: indexPath) as! MoreCell
         cell.moreItem = moreItems[indexPath.item]
+        print("moreItem set")
         return cell
     }
     
@@ -59,6 +63,16 @@ class LauncherMore: NSObject, UICollectionViewDataSource, UICollectionViewDelega
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, minimumLineSpacingForSectionAt section: Int) -> CGFloat {
         return 0
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        let moreItem = moreItems[indexPath.item]
+        handleDismissMaskView()
+        lmd?.handleMoreItemClick(index: indexPath.row, item: moreItem)
+    }
+    
+    @objc func handleMoreItemClick() {
+    
     }
     
     func showMore() {
@@ -75,7 +89,10 @@ class LauncherMore: NSObject, UICollectionViewDataSource, UICollectionViewDelega
             UIView.animate(withDuration: animationDuration, delay: 0, options: UIView.AnimationOptions.curveEaseOut, animations: {
                 self.maskView.alpha = 0.5
                 self.collectionView.frame = CGRect(x: 0, y: window.frame.height - self.collectionViewHeight, width: window.frame.width, height: self.collectionViewHeight)
-            })
+            }) { (completed: Bool) in
+                
+                print("completed")
+            }
             
         }
     }
@@ -85,18 +102,22 @@ class LauncherMore: NSObject, UICollectionViewDataSource, UICollectionViewDelega
         UIView.animate(withDuration: animationDuration, animations: {
             self.maskView.alpha = 0
             self.collectionView.frame =  CGRect(x: 0, y: window!.frame.height, width: window!.frame.width, height: self.collectionViewHeight)
-        })
+        }) { (completed: Bool) in
+            print("complated")
+        }
     }
 }
 
 class MoreItem: NSObject {
     var iconName: String?
     var name: String?
+    var key: String?
     
-    init(iconName: String, name: String) {
+    init(iconName: String, name: String, key: String) {
         super.init()
         self.iconName = iconName
         self.name = name
+        self.key = key
     }
 }
 
@@ -114,6 +135,7 @@ class MoreCell: UICollectionViewCell {
     
     var moreItem: MoreItem? {
         didSet {
+            print("moreItem didSet")
             labelView.text = moreItem!.name
             iconView.image = UIImage(named: moreItem!.iconName!)!.withRenderingMode(.alwaysTemplate)
         }
